@@ -1,0 +1,20 @@
+export interface UserInterface {
+    id: string,
+    name: string,
+    ssn: string,
+    email?: string,
+    phone?: string,
+    birthDate?: string,
+    userName?: string,
+    rg?: string,
+    gender?: string,
+    avatarPath?: string,
+    cityName?: string,
+    secretariatName?: string,
+    roleName?: string,
+    roleId: string,
+    applicationId: string,
+    secretariatId: string,
+    cityId: string,
+    createdAt: string
+}
