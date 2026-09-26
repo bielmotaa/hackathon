@@ -24,7 +24,7 @@ export function SessionStatusBadge({
       )}
       <Text
         className={clsx(
-          "ml-2 text-xs font-semibold",
+          "ml-2 font-sans-semibold text-xs",
           isExpired
             ? "text-red-700"
             : tone === "on-brand"

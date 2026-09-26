@@ -56,27 +56,27 @@ export function CustomModal({
         ) : null}
         <View className="mx-6 w-full max-w-sm">
           <View className="items-center mb-[-26px] z-20">
-            <View className="shadow-lg shadow-black/25 rounded-full">{icon}</View>
+            <View className="rounded-full">{icon}</View>
           </View>
-          <View className="rounded-3xl shadow-2xl pt-10 pb-6 px-6 bg-white">
+          <View className="rounded-3xl pt-10 pb-6 px-6 bg-tourism-forest">
             {closeAction ? (
               <TouchableOpacity
                 activeOpacity={0.7}
-                className="absolute right-3 top-3 h-10 w-10 rounded-full items-center justify-center bg-black/5"
+                className="absolute right-3 top-3 h-10 w-10 rounded-full items-center justify-center bg-white/10"
                 onPress={closeAction}
                 disabled={loading}
                 accessibilityRole="button"
                 accessibilityLabel="Fechar"
               >
-                <X size={18} color="#2A2A2A" />
+                <X size={18} color="#F4EDE0" />
               </TouchableOpacity>
             ) : null}
             <View className="items-center mb-6">
-              <Text className="text-xl font-bold mb-2 text-center text-signup-text">
+              <Text className="font-sans-bold text-xl mb-2 text-center text-tourism-sand">
                 {title}
               </Text>
               {description ? (
-                <Text className="text-center text-sm leading-5 text-signup-text/70">
+                <Text className="text-center font-sans text-sm leading-5 text-tourism-mist">
                   {description}
                 </Text>
               ) : null}
@@ -86,25 +86,25 @@ export function CustomModal({
                 <>
                   <TouchableOpacity
                     activeOpacity={0.7}
-                    className="flex-1 mr-3 py-3.5 px-4 rounded-xl items-center bg-[#e5e7eb]"
+                    className="flex-1 mr-3 py-3.5 px-4 rounded-full items-center bg-white/10"
                     onPress={onPressCancel}
                     disabled={loading}
                   >
-                    <Text className="font-medium text-sm text-signup-text">
+                    <Text className="font-sans-medium text-sm text-tourism-sand">
                       {cancelLabel || "Cancelar"}
                     </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     activeOpacity={0.7}
-                    className="flex-1 py-3.5 px-4 rounded-xl items-center bg-signup-primary"
+                    className="flex-1 py-3.5 px-4 rounded-full items-center bg-tourism-ember"
                     onPress={onPressOk}
                     disabled={loading}
                   >
                     {loading ? (
-                      <ActivityIndicator size="small" color="#ffffff" />
+                      <ActivityIndicator size="small" color="#F4EDE0" />
                     ) : (
-                      <Text className="font-medium text-sm text-white">
+                      <Text className="font-sans-medium text-sm text-tourism-sand">
                         {labelSecundary || "OK"}
                       </Text>
                     )}
@@ -113,14 +113,14 @@ export function CustomModal({
               ) : (
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  className="w-full py-3.5 px-4 rounded-xl items-center bg-signup-primary"
+                  className="w-full py-3.5 px-4 rounded-full items-center bg-tourism-ember"
                   onPress={onPressOk}
                   disabled={loading}
                 >
                   {loading ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
+                    <ActivityIndicator size="small" color="#F4EDE0" />
                   ) : (
-                    <Text className="font-medium text-sm text-white">
+                    <Text className="font-sans-medium text-sm text-tourism-sand">
                       {titleButton || "OK"}
                     </Text>
                   )}

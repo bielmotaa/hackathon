@@ -38,7 +38,7 @@ export function TourismButton({
         <>
           <Text
             className={clsx(
-              "font-sans-bold text-base",
+              "font-sans-semibold text-base",
               isLight ? "text-tourism-night" : "text-tourism-sand"
             )}
           >

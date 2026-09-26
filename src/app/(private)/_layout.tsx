@@ -1,15 +1,17 @@
 import { Tabs } from "expo-router";
-import { Home, Sun, User } from "lucide-react-native";
+import { Compass, Home, User } from "lucide-react-native";
 
 export default function PrivateLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#265AB9",
-        tabBarInactiveTintColor: "#6B7280",
+        tabBarActiveTintColor: "#E2723A",
+        tabBarInactiveTintColor: "#A9B5AE",
+        tabBarLabelStyle: { fontFamily: "Inter_500Medium", fontSize: 12 },
         tabBarStyle: {
-          backgroundColor: "#EFF2F7",
+          backgroundColor: "#0F1613",
+          borderTopColor: "rgba(255,255,255,0.08)",
         },
       }}
     >
@@ -21,10 +23,10 @@ export default function PrivateLayout() {
         }}
       />
       <Tabs.Screen
-        name="weather"
+        name="places"
         options={{
-          tabBarLabel: "Tempo",
-          tabBarIcon: ({ color, size }) => <Sun color={color} size={size} />,
+          tabBarLabel: "Destaques",
+          tabBarIcon: ({ color, size }) => <Compass color={color} size={size} />,
         }}
       />
       <Tabs.Screen

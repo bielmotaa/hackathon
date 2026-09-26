@@ -2,25 +2,21 @@ import "../styles/global.css";
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import {
-  CormorantGaramond_500Medium_Italic,
-  CormorantGaramond_600SemiBold,
-} from "@expo-google-fonts/cormorant-garamond";
-import {
-  DMSans_400Regular,
-  DMSans_500Medium,
-  DMSans_700Bold,
-} from "@expo-google-fonts/dm-sans";
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const queryClient = new QueryClient()
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
-    CormorantGaramond_500Medium_Italic,
-    CormorantGaramond_600SemiBold,
-    DMSans_400Regular,
-    DMSans_500Medium,
-    DMSans_700Bold,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
   })
 
   if (!fontsLoaded) return null
@@ -30,8 +26,11 @@ export default function RootLayout() {
       <Stack screenOptions={{headerShown: false}}>
          <Stack.Screen name="onboarding"/>
          <Stack.Screen name="sign-in"/>
-         <Stack.Screen name="sign-up"/>
+         {/* Cadastro temporariamente desabilitado (sign-up.tsx mantido) */}
+         {/* <Stack.Screen name="sign-up"/> */}
          <Stack.Screen name="(private)"/>
+         <Stack.Screen name="place/[id]"/>
+         <Stack.Screen name="map"/>
       </Stack>
     </QueryClientProvider>
   );

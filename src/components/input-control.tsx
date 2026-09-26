@@ -17,7 +17,7 @@ export function InputControl<T extends FieldValues>({
 }: InputControlProps<T>) {
   return (
     <View>
-      {error && <Text className="text-xs mb-1 text-signup-error">{error}</Text>}
+      {error && <Text className="mb-1 font-sans text-xs text-signup-error">{error}</Text>}
       <Controller
         control={control}
         name={name}

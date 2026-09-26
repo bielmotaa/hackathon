@@ -97,3 +97,14 @@ export function formatDateOfBirthToISO(value: string): string {
     now.getSeconds()
   ).toISOString()
 }
+
+
+// A API usa textos no lugar de null (ex.: "não informado", "confirmar").
+export function informedValue(value?: string | null) {
+  if (!value || /não informado|confirmar|não se aplica/i.test(value)) return undefined
+  return value
+}
+
+export function formatDistance(km: number) {
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1).replace(".", ",")} km`
+}

@@ -1,19 +1,17 @@
-import { useUserStore } from "@/shared/store/user/user-store"
 import { useSessionViewModel } from "@/shared/viewmodels/session/session-view-model"
-import { maskCpf, formatPhoneNumber } from "@/shared/utils/formatters"
+import { formatPhoneNumber } from "@/shared/utils/formatters"
+import {
+  MOCK_PROFILE_STATS,
+  MOCK_PROFILE_USER,
+  MOCK_TRAVEL_INTERESTS,
+} from "@/shared/mocks/profile-mock"
 
 export type ProfileFieldKey =
   | "name"
   | "birthDate"
-  | "gender"
-  | "cpf"
-  | "rg"
-  | "userName"
+  | "city"
   | "phone"
   | "email"
-  | "city"
-  | "secretariat"
-  | "role"
   | "memberSince"
 
 interface ProfileField {
@@ -36,30 +34,9 @@ function formatDate(iso?: string) {
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return undefined
 
-  const day = String(date.getDate()).padStart(2, "0")
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  return `${day}/${month}/${date.getFullYear()}`
-}
-
-function calculateAge(iso?: string) {
-  if (!iso) return undefined
-  const birthDate = new Date(iso)
-  if (Number.isNaN(birthDate.getTime())) return undefined
-
-  const today = new Date()
-  let age = today.getFullYear() - birthDate.getFullYear()
-  const hasHadBirthdayThisYear =
-    today.getMonth() > birthDate.getMonth() ||
-    (today.getMonth() === birthDate.getMonth() &&
-      today.getDate() >= birthDate.getDate())
-
-  if (!hasHadBirthdayThisYear) age -= 1
-  return age
-}
-
-function capitalize(value?: string) {
-  if (!value) return undefined
-  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+  const day = String(date.getUTCDate()).padStart(2, "0")
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0")
+  return `${day}/${month}/${date.getUTCFullYear()}`
 }
 
 function onlyAvailable(
@@ -72,58 +49,38 @@ function onlyAvailable(
 }
 
 export const useProfileViewModel = () => {
-  const user = useUserStore((state) => state.user)
+  const user = MOCK_PROFILE_USER
   const session = useSessionViewModel()
 
-  const birthDateLabel = formatDate(user?.birthDate)
-  const age = calculateAge(user?.birthDate)
-  const birthDateValue = birthDateLabel
-    ? age !== undefined
-      ? `${birthDateLabel} · ${age} anos`
-      : birthDateLabel
-    : undefined
-
-  const personalFields = onlyAvailable([
-    { key: "name", label: "Nome", value: user?.name },
-    { key: "birthDate", label: "Data de nascimento", value: birthDateValue },
-    { key: "gender", label: "Gênero", value: capitalize(user?.gender) },
-    {
-      key: "cpf",
-      label: "CPF",
-      value: user?.ssn ? maskCpf(user.ssn) : undefined,
-    },
-    { key: "rg", label: "RG", value: user?.rg },
-    { key: "userName", label: "Nome de usuário", value: user?.userName },
+  const aboutFields = onlyAvailable([
+    { key: "name", label: "Nome", value: user.name },
+    { key: "birthDate", label: "Data de nascimento", value: formatDate(user.birthDate) },
+    { key: "city", label: "Cidade", value: user.cityName },
   ])
 
   const contactFields = onlyAvailable([
     {
       key: "phone",
       label: "Telefone",
-      value: user?.phone ? formatPhoneNumber(user.phone) : undefined,
+      value: user.phone ? formatPhoneNumber(user.phone) : undefined,
     },
-    { key: "email", label: "E-mail", value: user?.email },
+    { key: "email", label: "E-mail", value: user.email },
   ])
 
-  const institutionalFields = onlyAvailable([
-    { key: "city", label: "Cidade", value: user?.cityName },
-    { key: "secretariat", label: "Secretaria", value: user?.secretariatName },
-    { key: "role", label: "Função", value: user?.roleName },
-    {
-      key: "memberSince",
-      label: "Membro desde",
-      value: formatDate(user?.createdAt),
-    },
+  const accountFields = onlyAvailable([
+    { key: "memberSince", label: "Viajante desde", value: formatDate(user.createdAt) },
   ])
 
   return {
-    name: user?.name ?? "",
-    email: user?.email,
-    initials: getInitials(user?.name),
+    name: user.name,
+    email: user.email,
+    initials: getInitials(user.name),
+    stats: MOCK_PROFILE_STATS,
+    interests: MOCK_TRAVEL_INTERESTS,
     sections: [
-      { title: "Dados pessoais", fields: personalFields },
+      { title: "Sobre você", fields: aboutFields },
       { title: "Contato", fields: contactFields },
-      { title: "Institucional", fields: institutionalFields },
+      { title: "Sua conta", fields: accountFields },
     ].filter((section) => section.fields.length > 0),
     ...session,
   }

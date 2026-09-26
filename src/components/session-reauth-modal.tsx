@@ -9,7 +9,7 @@ import {
 } from "react-native"
 import { Control, FieldErrors } from "react-hook-form"
 import { ShieldAlert, UserRound } from "lucide-react-native"
-import { Button } from "@/components/button"
+import { TourismButton } from "@/components/tourism-button"
 import { InputControl } from "@/components/input-control"
 import { maskCpf } from "@/shared/utils/formatters"
 import { SignInFormData } from "@/shared/viewmodels/sign-in/sign-in-schema"
@@ -54,21 +54,21 @@ export function SessionReauthModal({
 
           <View className="mx-6 w-full max-w-sm">
             <View className="z-20 mb-[-26px] items-center">
-              <View className="rounded-full shadow-lg shadow-black/25">
+              <View className="rounded-full">
                 <ShieldAlert size={32} color="#B91C1C" />
               </View>
             </View>
 
-            <View className="rounded-3xl bg-white px-6 pb-6 pt-10 shadow-2xl">
+            <View className="rounded-3xl bg-tourism-forest px-6 pb-6 pt-10">
               <ScrollView
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
               >
                 <View className="mb-5 items-center">
-                  <Text className="mb-2 text-center text-xl font-bold text-signup-text">
+                  <Text className="mb-2 text-center font-sans-bold text-xl text-tourism-sand">
                     Sessão expirada
                   </Text>
-                  <Text className="text-center text-sm leading-5 text-signup-text/70">
+                  <Text className="text-center font-sans text-sm leading-5 text-tourism-mist">
                     Sua sessão terminou. Informe seu CPF e senha para
                     continuar.
                   </Text>
@@ -83,6 +83,7 @@ export function SessionReauthModal({
                 ) : null}
 
                 <InputControl
+                  tone="dark"
                   isRequire
                   label="Seu CPF"
                   name="ssn"
@@ -92,10 +93,11 @@ export function SessionReauthModal({
                   maxLength={14}
                   placeholder="Digite seu CPF"
                   error={errors.ssn?.message}
-                  icon={<UserRound size={18} color="#6B7280" />}
+                  icon={<UserRound size={18} color="#A9B5AE" />}
                 />
 
                 <InputControl
+                  tone="dark"
                   isRequire
                   label="Sua senha"
                   name="password"
@@ -105,7 +107,9 @@ export function SessionReauthModal({
                   secury
                 />
 
-                <Button
+                <TourismButton
+                  variant="ember"
+                  className="mt-2"
                   label={isSubmitting ? "Entrando..." : "Entrar de novo"}
                   onPress={onSubmit}
                   isLoading={isSubmitting}

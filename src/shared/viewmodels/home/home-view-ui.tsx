@@ -1,218 +1,207 @@
 import { FC } from "react"
-import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { ScrollView, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { StatusBar } from "expo-status-bar"
-import clsx from "clsx"
-import { ChevronRight, CloudSun, HeartHandshake, LogOut, PackageCheck } from "lucide-react-native"
-import { CustomModal } from "@/components/custom-modal"
-import { DeviceStatusCard } from "@/components/device-status-card"
-import { IconBadge } from "@/components/icon-badge"
-import { ManualsCard } from "@/components/manuals-card"
-import { SessionReauthModal } from "@/components/session-reauth-modal"
-import { SessionStatusBadge } from "@/components/session-status-badge"
+import { Search } from "lucide-react-native"
+import { CategoryTiles } from "@/components/category-tiles"
+import { TourismMap } from "@/components/tourism-map"
+import { DestinationCard } from "@/components/destination-card"
+import { StatusMessage } from "@/components/status-message"
 import { useHomeViewModel } from "./home-view-model"
 
 export const HomeViewUi: FC<ReturnType<typeof useHomeViewModel>> = ({
   firstName,
-  formattedDate,
-  days,
-  weather,
-  deliveriesCount,
-  onPressRealizarEntrega,
-  onPressManuals,
-  isConnected,
-  isLocationGranted,
-  onPressLocation,
-  isLogoutModalVisible,
-  openLogoutModal,
-  closeLogoutModal,
-  confirmLogout,
-  isSessionExpired,
-  isReauthModalVisible,
-  openReauthModal,
-  closeReauthModal,
-  reauthControl,
-  reauthErrors,
-  isReauthSubmitting,
-  reauthError,
-  handleReauthSubmit,
+  initial,
+  categories,
+  categoriesState,
+  categoriesError,
+  onRetryCategories,
+  selectedCategory,
+  onSelectCategory,
+  onPressPlace,
+  onOpenMap,
+  nearbyPlaces,
+  nearbyMapPlaces,
+  isFocused,
+  userLocation,
+  nearby,
+  places,
+  placesTotal,
+  placesState,
+  placesError,
+  onRetryPlaces,
+  onSeeAll,
 }) => {
+  const insets = useSafeAreaInsets()
+  const { width } = useWindowDimensions()
+  const cardWidth = Math.min(Math.max(width * 0.54, 176), 260)
+
   return (
-    <View className="flex-1 bg-signup-background">
+    <View className="flex-1 bg-tourism-night">
       <StatusBar style="light" />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="relative overflow-hidden rounded-b-3xl bg-signup-primary px-6 pb-6 pt-14">
-          <View pointerEvents="none" className="absolute -right-14 -top-16">
-            <View className="h-56 w-56 rounded-full border border-white/10" />
-            <View className="absolute left-14 top-14 h-32 w-32 rounded-full border-2 border-white/20" />
-            <View className="absolute left-24 top-24 h-14 w-14 rounded-full bg-white/10" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+        <View
+          className="flex-row items-center gap-4 px-6"
+          style={{ paddingTop: insets.top + 16 }}
+        >
+          <View className="h-12 w-12 items-center justify-center rounded-full bg-tourism-ember">
+            <Text className="font-sans-bold text-xl text-tourism-sand">{initial}</Text>
           </View>
-
-          <View className="flex-row items-start justify-between">
-            <View className="flex-1 pr-4">
-              <Text className="text-sm text-white/70">{formattedDate}</Text>
-              <Text className="mt-1 text-2xl font-extrabold text-white">
-                Olá, {firstName}
-              </Text>
-              <Text className="mt-1 text-sm text-white/80">
-                Vamos continuar a operação de hoje.
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              onPress={openLogoutModal}
-              activeOpacity={0.7}
-              className="h-10 w-10 items-center justify-center rounded-full bg-white/15"
-              accessibilityRole="button"
-              accessibilityLabel="Sair"
-            >
-              <LogOut size={18} color="#ffffff" />
-            </TouchableOpacity>
-          </View>
-
-          <View className="mt-4">
-            <SessionStatusBadge
-              isExpired={isSessionExpired}
-              onPressExpired={openReauthModal}
-              tone="on-brand"
-            />
+          <View className="flex-1">
+            <Text className="font-sans text-sm text-tourism-mist">Olá, {firstName}</Text>
+            <Text className="mt-0.5 font-sans-bold text-2xl tracking-tight text-tourism-sand">
+              Para onde quer ir hoje?
+            </Text>
           </View>
         </View>
 
-
-        <View className="mt-5 px-5">
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 10 }}
-          >
-            {days.map((day) => (
-              <View
-                key={day.date.toISOString()}
-                className={clsx(
-                  "w-14 items-center rounded-full py-3.5",
-                  day.isToday
-                    ? "bg-signup-primary"
-                    : "bg-white shadow-sm shadow-black/5"
-                )}
-              >
-                <Text
-                  className={clsx(
-                    "text-[10px] font-semibold uppercase tracking-wide",
-                    day.isToday ? "text-white/75" : "text-signup-gray"
-                  )}
-                >
-                  {day.weekdayLabel}
-                </Text>
-                <Text
-                  className={clsx(
-                    "mt-1 text-lg font-bold",
-                    day.isToday ? "text-white" : "text-signup-text"
-                  )}
-                >
-                  {day.dayNumber}
-                </Text>
-                <View
-                  className={clsx(
-                    "mt-1.5 h-1 w-1 rounded-full",
-                    day.isToday ? "bg-white" : "bg-transparent"
-                  )}
-                />
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-
-        <View className="mt-6 gap-3 px-5 pb-8">
-          <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-signup-gray">
-            Painel do dia
-          </Text>
-
-          <TouchableOpacity
-            onPress={onPressRealizarEntrega}
-            activeOpacity={0.85}
-            className="flex-row items-center justify-between rounded-2xl bg-signup-primary px-5 py-4"
-          >
-            <View className="flex-row items-center gap-3">
-              <IconBadge tone="inverted" icon={<HeartHandshake size={20} color="#ffffff" />} />
-              <View>
-                <Text className="text-base font-bold text-white">
-                  Realizar entrega
-                </Text>
-                <Text className="text-xs text-white/75">
-                  Registrar uma nova entrega
-                </Text>
-              </View>
-            </View>
-            <ChevronRight size={20} color="#ffffff" />
-          </TouchableOpacity>
-
-          <View className="flex-row gap-3">
-            <View className="flex-1 rounded-2xl bg-white p-4 shadow-sm shadow-black/5">
-              <IconBadge icon={<PackageCheck size={18} color="#265AB9" />} />
-              <Text className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-signup-gray">
-                Entregas realizadas
-              </Text>
-              <Text className="mt-1 text-3xl font-extrabold text-signup-text">
-                {deliveriesCount ?? "—"}
-              </Text>
-              <Text className="mt-1 text-[11px] text-signup-gray">
-                {deliveriesCount === null
-                  ? "Nenhum registro ainda"
-                  : "Total no período"}
-              </Text>
-            </View>
-
-            <View className="flex-1 rounded-2xl bg-white p-4 shadow-sm shadow-black/5">
-              <IconBadge icon={<CloudSun size={18} color="#265AB9" />} />
-              <Text className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-signup-gray">
-                {weather.city}
-              </Text>
-              <Text className="mt-1 text-3xl font-extrabold text-signup-text">
-                {weather.temperature}°
-              </Text>
-              <Text className="mt-1 text-[11px] text-signup-gray">
-                {weather.condition} · Máx {weather.max}° Mín {weather.min}°
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View className="px-5">
-          <Text className="mb-2 mt-[-10] text-xs font-semibold uppercase tracking-wide text-signup-gray">
-            Permissões
-          </Text>
-          <DeviceStatusCard
-            isLocationGranted={isLocationGranted}
-            onPressLocation={onPressLocation}
-            isConnected={isConnected}
+        <View className="mx-6 mt-7 h-12 flex-row items-center gap-3 rounded-full bg-tourism-forest px-4">
+          <Search size={18} color="#A9B5AE" />
+          <TextInput
+            className="flex-1 font-sans text-base text-tourism-sand"
+            placeholder="Busque destinos, experiências..."
+            placeholderTextColor="#A9B5AE"
           />
         </View>
 
-        <View className="mx-5 mt-5 mb-8">
-          <ManualsCard onPress={onPressManuals} />
+        <View className="mt-6">
+          {categoriesState === "success" ? (
+            <CategoryTiles
+              categories={categories}
+              selected={selectedCategory ?? ""}
+              onSelect={onSelectCategory}
+            />
+          ) : (
+            <StatusMessage
+              state={categoriesState}
+              message={
+                categoriesState === "empty"
+                  ? "Nenhuma categoria disponível no momento."
+                  : categoriesError
+              }
+              onRetry={onRetryCategories}
+            />
+          )}
         </View>
+
+        {placesState !== "idle" ? (
+          <>
+            <View className="mt-10 flex-row items-end justify-between px-6">
+              <View>
+                <Text className="font-sans-bold text-xl tracking-tight text-tourism-sand">
+                  Lugares para visitar
+                </Text>
+                {placesState === "success" ? (
+                  <Text className="mt-0.5 font-sans text-sm text-tourism-mist">
+                    {placesTotal} {placesTotal === 1 ? "lugar" : "lugares"}
+                  </Text>
+                ) : null}
+              </View>
+              {placesState === "success" ? (
+                <TouchableOpacity onPress={onSeeAll}>
+                  <Text className="font-sans-medium text-sm text-tourism-ember">Ver todos</Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
+
+            {placesState === "success" ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                className="mt-4"
+                contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
+              >
+                {places.map((place) => (
+                  <DestinationCard
+                    key={place.id}
+                    place={place}
+                    style={{ width: cardWidth }}
+                    onPress={() => onPressPlace(place.id)}
+                  />
+                ))}
+              </ScrollView>
+            ) : (
+              <View className="mt-4">
+                <StatusMessage
+                  state={placesState}
+                  message={
+                    placesState === "empty" ? "Nenhum lugar nesta categoria por enquanto." : placesError
+                  }
+                  onRetry={onRetryPlaces}
+                />
+              </View>
+            )}
+          </>
+        ) : null}
+
+        <View className="mt-10 flex-row items-end justify-between px-6">
+          <View className="flex-1">
+            <Text className="font-sans-bold text-xl tracking-tight text-tourism-sand">Lugares próximos</Text>
+            <Text className="mt-0.5 font-sans text-sm text-tourism-mist">
+              Atualiza conforme você se move.
+            </Text>
+          </View>
+          <TouchableOpacity onPress={onOpenMap}>
+            <Text className="font-sans-medium text-sm text-tourism-ember">Abrir mapa</Text>
+          </TouchableOpacity>
+        </View>
+
+        {nearby.state === "success" ? (
+          <>
+            <TouchableOpacity
+              onPress={onOpenMap}
+              activeOpacity={0.9}
+              accessibilityRole="button"
+              accessibilityLabel="Abrir mapa de lugares próximos"
+              className="mx-6 mt-4 h-48 overflow-hidden rounded-3xl"
+            >
+              <View className="flex-1" pointerEvents="none">
+                {isFocused ? (
+                  <TourismMap
+                    className="flex-1"
+                    places={nearbyMapPlaces}
+                    userLocation={userLocation}
+                    interactive={false}
+                  />
+                ) : (
+                  <View className="flex-1 bg-tourism-forest" />
+                )}
+              </View>
+              <View className="absolute bottom-3 left-3 rounded-full bg-tourism-night/90 px-4 py-2">
+                <Text className="font-sans-medium text-sm text-tourism-sand">
+                  {nearbyPlaces.length} {nearbyPlaces.length === 1 ? "lugar próximo" : "lugares próximos"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="mt-4"
+              contentContainerStyle={{ paddingHorizontal: 24, gap: 16 }}
+            >
+              {nearbyPlaces.map(({ place, distanceKm }) => (
+                <DestinationCard
+                  key={place.id}
+                  place={place}
+                  distanceKm={distanceKm}
+                  style={{ width: cardWidth }}
+                  onPress={() => onPressPlace(place.id)}
+                />
+              ))}
+            </ScrollView>
+          </>
+        ) : (
+          <View className="mt-4">
+            <StatusMessage
+              state={nearby.state as "loading" | "error" | "empty"}
+              message={nearby.message}
+              onRetry={nearby.onAction}
+              actionLabel={nearby.actionLabel}
+            />
+          </View>
+        )}
       </ScrollView>
-
-      <SessionReauthModal
-        modalVisible={isReauthModalVisible}
-        control={reauthControl}
-        errors={reauthErrors}
-        isSubmitting={isReauthSubmitting}
-        errorMessage={reauthError}
-        onSubmit={handleReauthSubmit}
-        onClose={closeReauthModal}
-      />
-
-      <CustomModal
-        modalVisible={isLogoutModalVisible}
-        icon={<LogOut size={28} color="#265AB9" />}
-        title="Sair da conta?"
-        description="Você precisará informar seu CPF e senha novamente para entrar."
-        cancelLabel="Cancelar"
-        labelSecundary="Sair"
-        onPressCancel={closeLogoutModal}
-        onPressOk={confirmLogout}
-        onClose={closeLogoutModal}
-      />
     </View>
   )
 }
